@@ -1,0 +1,48 @@
+<idea-plugin>
+    <id>com.example.angularbuilder</id>
+    <name>AngularBuilder</name>
+    <version>1.0.0</version>
+    <vendor email="support@example.com" url="https://example.com">Example</vendor>
+
+    <description><![CDATA[
+    Плагин для создания новых Angular проектов прямо из IntelliJ IDEA.
+    
+    Функциональность:
+    - Создание нового Angular проекта через контекстное меню
+    - Настройка параметров проекта (имя, директория, стили)
+    - Интеграция с Angular CLI
+    ]]></description>
+
+    <change-notes><![CDATA[
+    <h3>1.0.0</h3>
+    <ul>
+        <li>Первая версия плагина</li>
+        <li>Создание Angular проекта через контекстное меню</li>
+    </ul>
+    ]]></change-notes>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+    <idea-version since-build="232" until-build="242.*"/>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="com.example.angularbuilder.CreateAngularProject"
+                class="com.example.angularbuilder.actions.CreateAngularProjectAction"
+                text="Create Angular Project"
+                description="Создать новый Angular проект">
+            <add-to-group group-id="FileMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt A"/>
+        </action>
+    </actions>
+</idea-plugin>
+
