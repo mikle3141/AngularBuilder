@@ -17,7 +17,7 @@ class CreateAngularProjectAction : AnAction("Create Angular Project",
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: run {
             Messages.showErrorDialog(
-                null,
+                null as com.intellij.openapi.project.Project?,
                 "Проект не найден. Пожалуйста, откройте проект в IntelliJ IDEA.",
                 "Ошибка"
             )

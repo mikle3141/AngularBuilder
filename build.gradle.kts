@@ -43,6 +43,7 @@ tasks {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // Kotlin stdlib автоматически предоставляется IntelliJ Platform
+    // Не нужно добавлять явно, чтобы избежать конфликтов версий
 }
 

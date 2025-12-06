@@ -2,8 +2,8 @@ package com.example.angularbuilder.utils;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.CapturingProcessHandler;
+import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.project.Project;
 
 import java.nio.file.Files;
@@ -69,24 +69,22 @@ public class AngularProjectCreator {
         
         // Выполняем команду
         try {
-            ProcessHandler processHandler = new OSProcessHandler(commandLine);
-            processHandler.startNotify();
+            CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
+            ProcessOutput output = processHandler.runProcess(60000); // 60 секунд таймаут
             
-            // Ждем завершения процесса
-            processHandler.waitFor();
-            
-            int exitCode = processHandler.getProcess().exitValue();
+            int exitCode = output.getExitCode();
             if (exitCode != 0) {
+                String errorOutput = output.getStderr();
                 throw new ExecutionException(
-                    "Ошибка выполнения команды Angular CLI. Код выхода: " + exitCode
+                    "Ошибка выполнения команды Angular CLI. Код выхода: " + exitCode +
+                    (errorOutput != null && !errorOutput.isEmpty() ? "\nОшибка: " + errorOutput : "")
                 );
             }
             
         } catch (ExecutionException e) {
             throw new Exception("Ошибка при выполнении Angular CLI: " + e.getMessage(), e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new Exception("Процесс создания проекта был прерван", e);
+        } catch (Exception e) {
+            throw new Exception("Ошибка при выполнении Angular CLI: " + e.getMessage(), e);
         }
     }
     
@@ -101,14 +99,10 @@ public class AngularProjectCreator {
             commandLine.setExePath("ng");
             commandLine.addParameter("version");
             
-            ProcessHandler processHandler = new OSProcessHandler(commandLine);
-            processHandler.startNotify();
-            processHandler.waitFor();
+            CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
+            ProcessOutput output = processHandler.runProcess(10000); // 10 секунд таймаут
             
-            return processHandler.getProcess().exitValue() == 0;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return false;
+            return output.getExitCode() == 0;
         } catch (Exception e) {
             return false;
         }
